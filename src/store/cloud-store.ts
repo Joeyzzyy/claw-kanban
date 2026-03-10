@@ -158,16 +158,23 @@ export class CloudBoardStore {
   async updateTask(taskId: string, params: Omit<KanbanUpdateParams, 'action' | 'taskId'>): Promise<Task> {
     const url = `${this.endpoint}/tasks`;
 
-    // Process artifacts (upload local files)
+    // Process artifacts (upload local files), then send as newArtifacts
+    // so the server appends to existing artifacts instead of overwriting
     let uploadedUrls: string[] = [];
+    let newArtifacts: any[] | undefined;
     if (params.artifacts && params.artifacts.length > 0) {
       const result = await this.processArtifacts(params.artifacts);
-      params.artifacts = result.processed;
+      newArtifacts = result.processed;
       uploadedUrls = result.uploadedUrls;
     }
+    // Remove artifacts from params to avoid accidental overwrite
+    const { artifacts: _removed, ...restParams } = params;
 
     // Subtask merging is handled server-side — backend merges by title
-    const body = { id: taskId, ...params };
+    const body: any = { id: taskId, ...restParams };
+    if (newArtifacts && newArtifacts.length > 0) {
+      body.newArtifacts = newArtifacts;
+    }
     const options = {
       method: 'POST',
       headers: {
@@ -222,6 +229,40 @@ export class CloudBoardStore {
     };
   }
 
-  
-  // You would add other methods like getTask, queryTasks etc. here
+  async queryTasks(params: KanbanQueryParams): Promise<any> {
+    const searchParams = new URLSearchParams();
+    if (params.column && params.column !== 'all') searchParams.set('column', params.column);
+    if (params.taskId) searchParams.set('taskId', params.taskId);
+    if (params.keyword) searchParams.set('keyword', params.keyword);
+    if (params.limit) searchParams.set('limit', String(params.limit));
+
+    const url = `${this.endpoint}/tasks?${searchParams.toString()}`;
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${this.apiKey}`,
+      },
+    });
+
+    if (!response.ok) {
+      const errText = await response.text();
+      throw new Error(`Failed to query tasks: ${response.status} ${errText}`);
+    }
+
+    const result = await response.json();
+
+    // Single task detail
+    if (params.taskId || params.query === 'detail') {
+      return { task: this.mapCloudTaskToLocal(result.data) };
+    }
+
+    // Stats only
+    if (params.query === 'stats') {
+      return result.stats;
+    }
+
+    // List / search: map all tasks
+    const tasks = (result.data || []).map((t: any) => this.mapCloudTaskToLocal(t));
+    return { tasks, stats: result.stats };
+  }
 }

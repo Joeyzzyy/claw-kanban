@@ -80,9 +80,14 @@ const plugin = {
       name: "kanban_query",
       description: "Query the Kanban board — list tasks, get stats, search",
       parameters: manifestTools.kanban_query.parameters,
-      async execute(_id: string, _params: KanbanQueryParams) {
-        const result = { success: true, message: "Use the web dashboard at webkanbanforopenclaw.vercel.app to view tasks." };
-        return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
+      async execute(_id: string, params: KanbanQueryParams) {
+        try {
+          const result = await store.queryTasks(params);
+          return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
+        } catch (error: any) {
+          console.error("[claw-kanban] Query failed:", error);
+          return { content: [{ type: "text", text: `Error: ${error.message}` }] };
+        }
       },
     });
 
