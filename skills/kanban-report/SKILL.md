@@ -2,7 +2,7 @@
 name: kanban-report
 description: Generate a summary report of the Kanban board — what's in progress, what's done today, overall stats.
 user-invocable: true
-metadata: { "openclaw": { "emoji": "📊" } }
+metadata: { "clawdbot": { "emoji": "📊" } }
 ---
 
 ## Kanban Report — Board Summary

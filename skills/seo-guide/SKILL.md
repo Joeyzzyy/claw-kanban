@@ -2,7 +2,7 @@
 name: seo-guide
 description: Your SEO co-pilot. Recommends the right SEO workflow based on your situation — whether you need content ideas, competitor intel, or a full campaign.
 user-invocable: true
-metadata: { "openclaw": { "emoji": "🧭", "always": false } }
+metadata: { "clawdbot": { "emoji": "🧭", "always": false } }
 ---
 
 ## SEO Strategy Navigator

@@ -33,7 +33,7 @@ const plugin = {
       },
       async execute(_id: string, params: any) {
         saveGlobalConfig(params);
-        return { content: [{ type: "text", text: "Configuration saved globally." }] };
+        return { content: [{ type: "text", text: "Configuration saved globally. NOTE: The OpenClaw gateway must be restarted for the new configuration to take effect." }] };
       }
     });
 
@@ -57,7 +57,7 @@ const plugin = {
               type: "text",
               text: JSON.stringify({
                 success: false,
-                message: "Resend API key not configured. Set plugins.entries.claw-kanban.config.resendApiKey in your settings and restart."
+                message: "Resend API key not configured. Please ask the user for their Resend API Key (they can get one at resend.com/api-keys), then use `kanban_config_save` to save it, and ask the user to restart OpenClaw."
               })
             }]
           };
@@ -77,7 +77,7 @@ const plugin = {
       parameters: manifestTools.edm_track.parameters,
       async execute(_id: string, params: { campaignId: string }) {
         if (!resendKey) {
-          return { content: [{ type: "text", text: JSON.stringify({ success: false, message: "Resend API key not configured." }) }] };
+          return { content: [{ type: "text", text: JSON.stringify({ success: false, message: "Resend API key not configured. Please ask the user for their Resend API Key, use `kanban_config_save` to save it, and ask the user to restart OpenClaw." }) }] };
         }
         if (!edmStore) {
           return { content: [{ type: "text", text: JSON.stringify({ success: false, message: "Cloud API key not configured. Campaign tracking requires apiKey." }) }] };
@@ -109,22 +109,36 @@ const plugin = {
     });
 
     // --- Kanban tools (require apiKey) ---
-    if (!pluginConfig.apiKey?.trim()) {
-      console.warn("[claw-kanban] apiKey not set — kanban tools disabled. EDM tools still available.");
-      return;
-    }
+    const apiKey = pluginConfig.apiKey?.trim();
+    const store = apiKey
+      ? new CloudBoardStore(
+          apiKey,
+          pluginConfig.cloudApiEndpoint?.trim() ?? "https://webkanbanforopenclaw.vercel.app/api/v1"
+        )
+      : null;
 
-    const store = new CloudBoardStore(
-      pluginConfig.apiKey.trim(),
-      pluginConfig.cloudApiEndpoint?.trim() ?? "https://webkanbanforopenclaw.vercel.app/api/v1"
-    );
-    console.log("[claw-kanban] Cloud mode: syncing to Claw Kanban Cloud.");
+    if (store) {
+      console.log("[claw-kanban] Cloud mode: syncing to Claw Kanban Cloud.");
+    } else {
+      console.warn("[claw-kanban] apiKey not set — kanban tools will prompt user for config.");
+    }
 
     api.registerTool({
       name: "kanban_update",
       description: "Create or update a task on the Kanban board",
       parameters: manifestTools.kanban_update.parameters,
       async execute(_id: string, params: KanbanUpdateParams) {
+        if (!store) {
+          return {
+            content: [{
+              type: "text",
+              text: JSON.stringify({
+                success: false,
+                message: "Cloud API key not configured. Please ask the user for their Claw Kanban API Key (they can get it at https://webkanbanforopenclaw.vercel.app), then use `kanban_config_save` to save it."
+              })
+            }]
+          };
+        }
         try {
           if (params.action === "create") {
             // TEMPLATE INJECTION FOR CLOUD MODE
@@ -174,6 +188,17 @@ const plugin = {
       description: "Query the Kanban board — list tasks, get stats, search",
       parameters: manifestTools.kanban_query.parameters,
       async execute(_id: string, params: KanbanQueryParams) {
+        if (!store) {
+          return {
+            content: [{
+              type: "text",
+              text: JSON.stringify({
+                success: false,
+                message: "Cloud API key not configured. Please ask the user for their Claw Kanban API Key (they can get it at https://webkanbanforopenclaw.vercel.app), then use `kanban_config_save` to save it."
+              })
+            }]
+          };
+        }
         try {
           const result = await store.queryTasks(params);
           return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
@@ -186,10 +211,15 @@ const plugin = {
 
     // Auto-inject kanban tracking prompt before every agent run
     api.on('before_agent_start', async (_event: any, _context: any) => {
-      return {
-        prependContext: `## Claw Kanban — Task Tracking Protocol
+      let prependContext = `## Claw Kanban — Task Tracking Protocol\n\n`;
 
-You have access to a \`kanban_update\` tool for tracking your work on a visual Kanban board. Follow these rules:
+      if (!store) {
+        prependContext += `**⚠️ ACTION REQUIRED**: The Claw Kanban API Key is not configured. 
+Before tracking tasks, you MUST ask the user for their API Key (they can get one at https://webkanbanforopenclaw.vercel.app). 
+Once they provide it, use the \`kanban_config_save\` tool to save it, AND TELL THE USER to restart their OpenClaw gateway for it to take effect. Do not attempt to use \`kanban_update\` until configured.\n\n`;
+      }
+
+      prependContext += `You have access to a \`kanban_update\` tool for tracking your work on a visual Kanban board. Follow these rules:
 
 ### When to Track
 - Track any substantive task: research, writing, analysis, code generation, SEO audits, file creation, etc.
@@ -221,8 +251,9 @@ When working on an EDM task (taskType="edm"):
 3. This links the task to the campaign record so the dashboard can display real delivery stats (recipients, open rate, click rate, etc.) instead of relying on text parsing.
 
 ### Template Hint
-If a matching template exists (e.g. "keyword-research", "competitor-analysis", "on-page-seo-auditor", "seo-campaign", "sitemap-gap-analyzer"), pass \`template="<exact-name>"\` in the create call to auto-populate subtasks.`
-      };
+If a matching template exists (e.g. "keyword-research", "competitor-analysis", "on-page-seo-auditor", "seo-campaign", "sitemap-gap-analyzer"), pass \`template="<exact-name>"\` in the create call to auto-populate subtasks.`;
+
+      return { prependContext };
     });
   },
 };

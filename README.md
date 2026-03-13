@@ -63,6 +63,12 @@ The agent is equipped with the `kanban-manage` skill. It will automatically:
 
 The agent will create a card for this, and you'll see its research progress logged on the Kanban board in real-time.
 
+## 💖 Acknowledgements & Credits
+
+This plugin integrates and builds upon the excellent [SEO & GEO Skills Library](https://github.com/aaron-he-zhu/seo-geo-claude-skills) by Aaron Zhu. We have incorporated several of their powerful SEO skills (like Keyword Research, On-Page SEO Auditor, Sitemap Gap Analyzer, and Competitor Analysis) directly into Claw Kanban to provide a complete, closed-loop SEO workflow. We've also included a custom `markdown-to-html` skill to seamlessly turn those SEO Markdown drafts into publish-ready webpages.
+
+We extend our gratitude to the original author for open-sourcing these high-quality skills. Our plugin merges these capabilities with a visual task management board to track the agent's progress as it executes these SEO workflows.
+
 ## 📜 License
 
 This project is licensed under the **MIT License**. See the [LICENSE](LICENSE) file for details.

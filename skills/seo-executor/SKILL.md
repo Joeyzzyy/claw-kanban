@@ -2,7 +2,7 @@
 name: seo-executor
 description: Professional SEO content planner and executor. Follows advanced SEO workflows (Intent, LSI, EEAT) to produce high-quality SEO content.
 user-invocable: true
-metadata: { "openclaw": { "emoji": "🚀", "always": false } }
+metadata: { "clawdbot": { "emoji": "🚀", "always": false } }
 ---
 
 ## SEO Content Campaign Executor

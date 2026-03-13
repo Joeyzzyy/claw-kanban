@@ -2,7 +2,7 @@
 name: sitemap-gap-analyzer
 description: Advanced SEO growth strategist. Reads sitemap.xml, analyzes existing content coverage, performs gap analysis, and recommends new incremental SEO pages.
 user-invocable: true
-metadata: { "openclaw": { "emoji": "🗺️", "always": false } }
+metadata: { "clawdbot": { "emoji": "🗺️", "always": false } }
 ---
 
 ## Sitemap Gap & Incremental SEO Protocol

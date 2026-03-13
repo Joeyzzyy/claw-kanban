@@ -2,7 +2,7 @@
 name: on-page-seo-auditor
 description: Deep dive on-page SEO auditor. Checks metadata, structure, keyword density, and EEAT signals of a given URL.
 user-invocable: true
-metadata: { "openclaw": { "emoji": "🩺", "always": false } }
+metadata: { "clawdbot": { "emoji": "🩺", "always": false } }
 ---
 
 ## On-Page SEO Auditor Protocol

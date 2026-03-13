@@ -1,0 +1,29 @@
+{
+  "name": "claw-kanban",
+  "tagline": "A visual Kanban task board and complete SEO/EDM workflow suite for your OpenClaw agent.",
+  "description": "Claw Kanban provides a real-time, visual Kanban board to track the tasks your OpenClaw agent is working on. See what's in progress, what's done, and what went wrong, all from a cloud-based web dashboard. It also includes a powerful suite of SEO and EDM skills (Keyword Research, Competitor Analysis, Email Campaigns, and Markdown-to-HTML generation) seamlessly integrated into the Kanban workflow.",
+  "category": "productivity",
+  "tags": [
+    "kanban",
+    "task-management",
+    "seo",
+    "edm",
+    "dashboard",
+    "workflow"
+  ],
+  "version": "0.1.1",
+  "license": "MIT",
+  "pricing": "Free",
+  "homepage": "https://github.com/Joeyzzyy/webkanbanforopenclaw",
+  "repository": "https://github.com/Joeyzzyy/claw-kanban",
+  "author": {
+    "name": "seenos",
+    "url": "https://github.com/Joeyzzyy"
+  },
+  "acknowledgements": "Contains modified SEO & GEO skills originally created by Aaron Zhu at https://github.com/aaron-he-zhu/seo-geo-claude-skills",
+  "visuals": [
+    "docs/screenshot-1.png",
+    "docs/screenshot-2.png",
+    "docs/screenshot-3.png"
+  ]
+}

@@ -2,7 +2,7 @@
 name: competitor-analysis
 description: Professional competitor analysis tool for SEO. Analyzes SERP rivals, finds content gaps, and builds competitive battlecards.
 user-invocable: true
-metadata: { "openclaw": { "emoji": "🕵️‍♂️", "always": false } }
+metadata: { "clawdbot": { "emoji": "🕵️‍♂️", "always": false } }
 ---
 
 ## Competitor Analysis Protocol

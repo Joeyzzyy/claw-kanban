@@ -2,7 +2,7 @@
 name: kanban-manage
 description: Track your tasks on a visual Kanban board. Report progress, create tasks, and mark them complete so the user can see what you're doing.
 user-invocable: true
-metadata: { "openclaw": { "emoji": "📋", "always": true } }
+metadata: { "clawdbot": { "emoji": "📋", "always": true } }
 ---
 
 ## Kanban Task Board — Active Reporting

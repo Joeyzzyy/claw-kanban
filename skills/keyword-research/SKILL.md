@@ -2,7 +2,7 @@
 name: keyword-research
 description: Professional keyword research and topic clustering tool for SEO & GEO. Use when the user wants to find what to write about or analyze search demand.
 user-invocable: true
-metadata: { "openclaw": { "emoji": "🔍", "always": false } }
+metadata: { "clawdbot": { "emoji": "🔍", "always": false } }
 ---
 
 ## Keyword Research & Analysis Protocol

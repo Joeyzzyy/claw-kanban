@@ -2,7 +2,7 @@
 name: edm-campaign
 description: Create and send beautiful marketing emails (EDM) via Resend. Handles branding setup, HTML generation, and delivery.
 user-invocable: true
-metadata: { "openclaw": { "emoji": "📧" } }
+metadata: { "clawdbot": { "emoji": "📧" } }
 ---
 
 ## EDM Marketing Email Campaign

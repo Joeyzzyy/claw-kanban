@@ -2,7 +2,7 @@
 name: edm-report
 description: View EDM campaign analytics — delivery stats, open rates, bounce reports, and filter recipients for re-marketing.
 user-invocable: true
-metadata: { "openclaw": { "emoji": "📊" } }
+metadata: { "clawdbot": { "emoji": "📊" } }
 ---
 
 ## EDM Campaign Report & Analytics

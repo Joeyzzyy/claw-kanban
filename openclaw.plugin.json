@@ -7,6 +7,7 @@
   "author": "seenos",
   "license": "MIT",
   "homepage": "https://github.com/Joeyzzyy/webkanbanforopenclaw",
+  "acknowledgements": "Contains modified SEO & GEO skills originally created by Aaron Zhu at https://github.com/aaron-he-zhu/seo-geo-claude-skills",
   "configSchema": {
     "type": "object",
     "properties": {
@@ -35,7 +36,8 @@
     "skills/keyword-research",
     "skills/competitor-analysis",
     "skills/on-page-seo-auditor",
-    "skills/sitemap-gap-analyzer"
+    "skills/sitemap-gap-analyzer",
+    "skills/markdown-to-html"
   ],
   "tools": {
     "kanban_update": {
