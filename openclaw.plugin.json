@@ -2,7 +2,7 @@
   "$schema": "https://docs.openclaw.ai/schemas/plugin.json",
   "id": "claw-kanban",
   "name": "claw-kanban",
-  "version": "0.2.1",
+  "version": "0.2.6",
   "description": "OpenClaw plugin — Kanban board, SEO, EDM, and Video Clip tools for your AI agent. Real-time cloud dashboard at teammate.work.",
   "author": "seenos",
   "license": "MIT",
@@ -19,10 +19,6 @@
         "type": "string",
         "description": "The endpoint for the Claw Kanban Cloud API.",
         "default": "https://teammate.work/api/v1"
-      },
-      "resendApiKey": {
-        "type": "string",
-        "description": "Your Resend API key for sending marketing emails. Get one at resend.com/api-keys"
       }
     }
   },
@@ -223,8 +219,6 @@
         "type": "object",
         "properties": {
           "apiKey": { "type": "string", "description": "Cloud Kanban API Key" },
-          "resendApiKey": { "type": "string", "description": "Resend API Key for EDM" },
-          "openaiApiKey": { "type": "string", "description": "OpenAI API Key for video processing" },
           "openaiBaseUrl": { "type": "string", "description": "Custom Base URL for OpenAI API (optional)" },
           "openaiApiVersion": { "type": "string", "description": "API Version for Azure OpenAI (optional)" },
           "openaiWhisperModel": { "type": "string", "description": "Audio model name (optional)" },
