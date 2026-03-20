@@ -1,6 +1,6 @@
 {
   "name": "claw-kanban",
-  "version": "0.2.10",
+  "version": "0.2.11",
   "description": "OpenClaw plugin — Kanban board, SEO, EDM, and Video Clip tools for your AI agent",
   "type": "module",
   "main": "dist/index.js",
