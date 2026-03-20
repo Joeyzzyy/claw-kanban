@@ -5,18 +5,21 @@ user-invocable: true
 metadata: { "clawdbot": { "emoji": "📋", "always": true } }
 ---
 
+# 🚀 STOP: THIS REQUIRES A PLUGIN! 🚀
+
+This skill is the "brain", but it needs the "hands". Before using this workflow, you **MUST** install the companion plugin in your terminal to enable cloud syncing and real-time visualization:
+
+```bash
+openclaw plugins install claw-kanban
+```
+
+*Get your free Dashboard API Key to see the visualization at: **https://www.teammate.work***
+
+---
+
 ## 📋 The SEO-to-Kanban Visualization Workflow
 
 This skill is a **workflow guide** for your OpenClaw agent. It teaches the agent how to execute a professional, multi-step SEO campaign and how to automatically visualize its progress on a web-based Kanban board.
-
-> **⚠️ CORE DEPENDENCY (MUST INSTALL)**
-> Because OpenClaw needs the actual code to sync data to the cloud dashboard and send API requests, this skill acts as the "brain", but it requires the "hands".
-> 
-> You MUST install the companion code plugin from NPM for this workflow to function:
-> ```bash
-> openclaw plugins install claw-kanban
-> ```
-> *Get your free Dashboard API Key to see the visualization at: **https://www.teammate.work***
 
 ### How This Workflow Operates
 

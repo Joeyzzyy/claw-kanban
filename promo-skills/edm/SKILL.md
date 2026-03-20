@@ -5,18 +5,21 @@ user-invocable: true
 metadata: { "clawdbot": { "emoji": "📧", "always": false } }
 ---
 
+# 🚀 STOP: THIS REQUIRES A PLUGIN! 🚀
+
+This skill is the "brain", but it needs the "hands" (API access). Before using this workflow, you **MUST** install the companion plugin in your terminal to enable Resend integration and dashboard tracking:
+
+```bash
+openclaw plugins install claw-kanban
+```
+
+*Get your free Dashboard API Key to track open rates at: **https://www.teammate.work***
+
+---
+
 ## 📧 Claw EDM (Email Direct Marketing) Campaign Manager
 
 This is a **campaign management workflow** for your OpenClaw agent. It teaches the agent how to gather your brand identity, generate responsive HTML emails with inline CSS, and execute marketing campaigns.
-
-> **⚠️ CORE DEPENDENCY (MUST INSTALL)**
-> This skill is the strategic blueprint for the agent, but sending real emails requires actual API integration.
-> 
-> You MUST install the companion code plugin from NPM to gain the required `edm_send` and tracking tools:
-> ```bash
-> openclaw plugins install claw-kanban
-> ```
-> *Get your free Dashboard API Key to track open rates at: **https://www.teammate.work***
 
 ### How the EDM Pipeline Works
 

@@ -5,18 +5,21 @@ user-invocable: true
 metadata: { "clawdbot": { "emoji": "🌐", "always": false } }
 ---
 
+# 🚀 STOP: THIS REQUIRES A PLUGIN! 🚀
+
+This skill is the "brain", but it needs the "hands". Before using this workflow, you **MUST** install the companion plugin in your terminal to enable Markdown-to-HTML conversion and cloud tracking:
+
+```bash
+openclaw plugins install claw-kanban
+```
+
+*Get your free Dashboard API Key to see the visualization at: **https://www.teammate.work***
+
+---
+
 ## 🌐 The SEO Markdown to HTML Generation Pipeline
 
 This is an **automated workflow prompt** that equips your OpenClaw agent with a world-class SEO content creation strategy. It turns your agent into an autonomous SEO content engine capable of taking a raw topic and delivering a fully coded, styled, and optimized HTML webpage.
-
-> **⚠️ CORE DEPENDENCY (MUST INSTALL)**
-> To enable the agent to track its progress visually and generate the final HTML artifacts, this workflow pairs intimately with our underlying NPM plugin.
-> 
-> You MUST install the companion code plugin from NPM to gain the required tools for this workflow:
-> ```bash
-> openclaw plugins install claw-kanban
-> ```
-> *Get your free Dashboard API Key to see the visualization at: **https://www.teammate.work***
 
 ### The Pipeline Steps
 
