@@ -343,8 +343,8 @@ When working on an EDM task (taskType="edm"):
 2. Save this \`campaignId\` — you MUST pass it when completing the task: \`kanban_update(action="complete", taskId="<id>", campaignId="<campaignId>", result="<summary>")\`
 3. This links the task to the campaign record so the dashboard can display real delivery stats (recipients, open rate, click rate, etc.) instead of relying on text parsing.
 
-### AI Settings for Video Processing
-If the user wants to process videos (or send emails via cloud), they MUST configure their third-party API Keys (e.g. OpenAI). You can ask for them and save them by calling \`kanban_config_save(openaiApiKey="sk-...", resendApiKey="re_...")\`. This securely syncs it to their cloud account at teammate.work.
+### Third-party AI Keys (Video / EDM)
+If the user wants to process videos or send emails, they must have their OpenAI or Resend keys configured in their teammate.work Cloud Dashboard. If they ask you to check their keys, or tell you their keys, you can use \`kanban_config_save\` to securely sync the keys to their cloud account. You DO NOT need to check if the keys are configured before calling \`video_clip\` or \`edm_send\` — just call the tools directly. If the keys are missing on the cloud, the tool will return a clear error, and ONLY THEN should you ask the user to provide them.
 
 ### Template Hint
 If a matching template exists (e.g. "keyword-research", "competitor-analysis", "on-page-seo-auditor", "seo-campaign", "sitemap-gap-analyzer"), pass \`template="<exact-name>"\` in the create call to auto-populate subtasks.`;
