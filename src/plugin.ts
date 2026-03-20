@@ -93,6 +93,34 @@ const plugin = {
       : null;
 
     api.registerTool({
+      name: "kanban_config_check",
+      description: "Check if third-party AI keys (OpenAI, Resend) are configured in the user's cloud account.",
+      parameters: { type: "object", properties: {}, required: [] },
+      async execute(_id: string, _params: any) {
+        const currentApiKey = pluginConfig.apiKey?.trim();
+        if (!currentApiKey) {
+          return { content: [{ type: "text", text: "Cannot check cloud settings: Claw Kanban apiKey is not configured locally." }] };
+        }
+        const rawEndpoint = pluginConfig.cloudApiEndpoint?.trim() ?? "https://teammate.work/api/v1";
+        const baseEndpoint = rawEndpoint.replace(/\/api\/v1\/?$/, "");
+
+        try {
+          const res = await fetch(`${baseEndpoint}/api/settings`, {
+            method: "GET",
+            headers: { "Authorization": `Bearer ${currentApiKey}` }
+          });
+          if (!res.ok) {
+            return { content: [{ type: "text", text: `Failed to fetch settings from cloud. Status: ${res.status}` }] };
+          }
+          const data = await res.json() as any;
+          return { content: [{ type: "text", text: JSON.stringify(data.settings, null, 2) }] };
+        } catch (error: any) {
+          return { content: [{ type: "text", text: `Error fetching settings: ${error.message}` }] };
+        }
+      }
+    });
+
+    api.registerTool({
       name: "edm_send",
       description: "Send a marketing email via Resend (supports batch)",
       parameters: manifestTools.edm_send.parameters,
@@ -344,7 +372,7 @@ When working on an EDM task (taskType="edm"):
 3. This links the task to the campaign record so the dashboard can display real delivery stats (recipients, open rate, click rate, etc.) instead of relying on text parsing.
 
 ### Third-party AI Keys (Video / EDM)
-If the user wants to process videos or send emails, they must have their OpenAI or Resend keys configured in their teammate.work Cloud Dashboard. If they ask you to check their keys, or tell you their keys, you can use \`kanban_config_save\` to securely sync the keys to their cloud account. You DO NOT need to check if the keys are configured before calling \`video_clip\` or \`edm_send\` — just call the tools directly. If the keys are missing on the cloud, the tool will return a clear error, and ONLY THEN should you ask the user to provide them.
+If the user wants to process videos or send emails, they must have their OpenAI or Resend keys configured in their teammate.work Cloud Dashboard. You can use \`kanban_config_check\` to see if their cloud account currently has these keys set. If they are missing, you can use \`kanban_config_save\` to securely sync the keys to their cloud account. You DO NOT need to check if the keys are configured before calling \`video_clip\` or \`edm_send\` — just call the tools directly, and they will use the cloud keys.
 
 ### Template Hint
 If a matching template exists (e.g. "keyword-research", "competitor-analysis", "on-page-seo-auditor", "seo-campaign", "sitemap-gap-analyzer"), pass \`template="<exact-name>"\` in the create call to auto-populate subtasks.`;
