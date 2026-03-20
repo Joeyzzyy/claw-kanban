@@ -6,10 +6,13 @@ import type { EdmCloudStore } from '../store/edm-store.js';
  * Uses Resend Batch API for multiple recipients.
  */
 export async function handleEdmSend(
-  resendApiKey: string,
   params: { to: string; from: string; subject: string; html: string },
   edmStore: EdmCloudStore | null
 ): Promise<{ success: boolean; campaignId?: string; emailIds?: string[]; message: string }> {
+  if (!edmStore) {
+    return { success: false, message: 'Cloud API key not configured. Cannot send emails.' };
+  }
+
   const recipients = params.to
     .split(',')
     .map((e) => e.trim())
@@ -19,60 +22,28 @@ export async function handleEdmSend(
     return { success: false, message: 'No recipients specified.' };
   }
 
-  let emailIds: string[];
-
-  if (recipients.length === 1) {
-    // Single recipient — standard Resend API
-    const response = await fetch('https://api.resend.com/emails', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${resendApiKey}`,
-      },
-      body: JSON.stringify({
-        from: params.from,
-        to: recipients,
-        subject: params.subject,
-        html: params.html,
-      }),
-    });
-
-    const data = (await response.json()) as Record<string, any>;
-    if (!response.ok) {
-      return {
-        success: false,
-        message: `Resend API error (${response.status}): ${data.message ?? JSON.stringify(data)}`,
-      };
-    }
-    emailIds = [data.id as string];
-  } else {
-    // Multiple recipients — Resend Batch API
-    const emails = recipients.map((to) => ({
+  // Use the cloud proxy to send emails using the user's stored Resend Key
+  const response = await fetch(`${edmStore.endpoint}/edm/send`, {
+    method: 'POST',
+    headers: edmStore.headers(),
+    body: JSON.stringify({
+      to: params.to,
       from: params.from,
-      to: [to],
       subject: params.subject,
       html: params.html,
-    }));
+    }),
+  });
 
-    const response = await fetch('https://api.resend.com/emails/batch', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${resendApiKey}`,
-      },
-      body: JSON.stringify(emails),
-    });
-
-    const data = (await response.json()) as Record<string, any>;
-    if (!response.ok) {
-      return {
-        success: false,
-        message: `Resend Batch API error (${response.status}): ${data.message ?? JSON.stringify(data)}`,
-      };
-    }
-    // Batch response: { data: [{ id: "..." }, ...] }
-    emailIds = ((data.data ?? data) as { id: string }[]).map((item) => item.id);
+  const data = await response.json() as any;
+  
+  if (!response.ok) {
+    return {
+      success: false,
+      message: `Cloud Proxy Error (${response.status}): ${data.error || data.message || JSON.stringify(data)}`,
+    };
   }
+
+  const emailIds = data.emailIds as string[];
 
   // Create campaign record in the cloud (if store is available)
   let campaignId: string | undefined;
@@ -116,7 +87,6 @@ export async function handleEdmSend(
  * Refresh delivery status for a campaign by polling Resend GET /emails/{id}.
  */
 export async function handleEdmTrack(
-  resendApiKey: string,
   campaignId: string,
   edmStore: EdmCloudStore
 ): Promise<{ success: boolean; stats: CampaignStats | null; message: string }> {
@@ -127,28 +97,24 @@ export async function handleEdmTrack(
     return { success: false, stats: null, message: 'No recipients found for this campaign.' };
   }
 
-  // 2. Poll Resend for each emailId
-  const updates: { emailId: string; lastEvent: string; lastEventAt: string | null }[] = [];
+  // 2. Poll Resend via cloud proxy using user's stored Resend Key
+  const emailIds = recipients.map((r) => r.emailId);
+  const response = await fetch(`${edmStore.endpoint}/edm/track`, {
+    method: 'POST',
+    headers: edmStore.headers(),
+    body: JSON.stringify({ emailIds }),
+  });
 
-  for (const recipient of recipients) {
-    try {
-      const response = await fetch(`https://api.resend.com/emails/${recipient.emailId}`, {
-        method: 'GET',
-        headers: { Authorization: `Bearer ${resendApiKey}` },
-      });
-
-      if (response.ok) {
-        const emailData = (await response.json()) as Record<string, any>;
-        updates.push({
-          emailId: recipient.emailId,
-          lastEvent: emailData.last_event ?? 'sent',
-          lastEventAt: emailData.created_at ?? null,
-        });
-      }
-    } catch (err: any) {
-      console.warn(`[edm] Failed to poll Resend for ${recipient.emailId}: ${err.message}`);
-    }
+  const data = await response.json() as any;
+  if (!response.ok) {
+    return {
+      success: false,
+      stats: null,
+      message: `Cloud Proxy Error (${response.status}): ${data.error || data.message || JSON.stringify(data)}`,
+    };
   }
+
+  const updates = data.updates as { emailId: string; lastEvent: string; lastEventAt: string | null }[];
 
   // 3. Batch update recipients in cloud
   if (updates.length > 0) {
@@ -161,7 +127,7 @@ export async function handleEdmTrack(
   return {
     success: true,
     stats,
-    message: `Tracked ${updates.length}/${recipients.length} emails. Delivery rate: ${(stats.deliveryRate * 100).toFixed(1)}%, Open rate: ${(stats.openRate * 100).toFixed(1)}%`,
+    message: data.message || `Tracked ${updates.length}/${recipients.length} emails.`,
   };
 }
 

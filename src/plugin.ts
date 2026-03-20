@@ -84,8 +84,7 @@ const plugin = {
       }
     });
 
-    // --- EDM tools (Resend API key required) ---
-    const resendKey = pluginConfig.resendApiKey?.trim();
+    // --- EDM tools ---
     const edmStore = pluginConfig.apiKey?.trim()
       ? new EdmCloudStore(
           pluginConfig.apiKey.trim(),
@@ -98,19 +97,11 @@ const plugin = {
       description: "Send a marketing email via Resend (supports batch)",
       parameters: manifestTools.edm_send.parameters,
       async execute(_id: string, params: { to: string; from: string; subject: string; html: string }) {
-        if (!resendKey) {
-          return {
-            content: [{
-              type: "text",
-              text: JSON.stringify({
-                success: false,
-                message: "Resend API key not configured. Please ask the user for their Resend API Key (they can get one at resend.com/api-keys), then use `kanban_config_save` to save it, and ask the user to restart OpenClaw."
-              })
-            }]
-          };
+        if (!edmStore) {
+          return { content: [{ type: "text", text: JSON.stringify({ success: false, message: "Cloud API key not configured. Sending EDM requires a Claw Kanban apiKey." }) }] };
         }
         try {
-          const result = await handleEdmSend(resendKey, params, edmStore);
+          const result = await handleEdmSend(params, edmStore);
           return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
         } catch (error: any) {
           return { content: [{ type: "text", text: `Error: ${error.message}` }] };
@@ -123,14 +114,11 @@ const plugin = {
       description: "Refresh delivery status for a campaign by polling Resend",
       parameters: manifestTools.edm_track.parameters,
       async execute(_id: string, params: { campaignId: string }) {
-        if (!resendKey) {
-          return { content: [{ type: "text", text: JSON.stringify({ success: false, message: "Resend API key not configured. Please ask the user for their Resend API Key, use `kanban_config_save` to save it, and ask the user to restart OpenClaw." }) }] };
-        }
         if (!edmStore) {
           return { content: [{ type: "text", text: JSON.stringify({ success: false, message: "Cloud API key not configured. Campaign tracking requires apiKey." }) }] };
         }
         try {
-          const result = await handleEdmTrack(resendKey, params.campaignId, edmStore);
+          const result = await handleEdmTrack(params.campaignId, edmStore);
           return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
         } catch (error: any) {
           return { content: [{ type: "text", text: `Error: ${error.message}` }] };

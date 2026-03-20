@@ -5,15 +5,15 @@ import type { Campaign, CampaignStats, CampaignRecipient, EdmQueryParams } from 
  * Wraps the backend API endpoints for campaign CRUD.
  */
 export class EdmCloudStore {
-  private apiKey: string;
-  private endpoint: string;
+  public apiKey: string;
+  public endpoint: string;
 
   constructor(apiKey: string, endpoint: string) {
     this.apiKey = apiKey;
     this.endpoint = endpoint;
   }
 
-  private headers(json = true): Record<string, string> {
+  public headers(json = true): Record<string, string> {
     const h: Record<string, string> = { Authorization: `Bearer ${this.apiKey}` };
     if (json) h['Content-Type'] = 'application/json';
     return h;
