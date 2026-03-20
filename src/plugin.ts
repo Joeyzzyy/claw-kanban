@@ -39,7 +39,8 @@ const plugin = {
         // 2. Sync AI settings to the cloud if the user has an apiKey configured
         const currentApiKey = params.apiKey || pluginConfig.apiKey?.trim();
         const rawEndpoint = pluginConfig.cloudApiEndpoint?.trim() ?? "https://teammate.work/api/v1";
-        const baseEndpoint = rawEndpoint.replace(/\/v1\/?$/, "");
+        // IMPORTANT: We need a trailing slash if it doesn't exist, to properly append 'settings'
+        const baseEndpoint = rawEndpoint.replace(/\/v1\/?$/, "/");
 
         const cloudUpdates: any = {};
         if (params.openaiApiKey !== undefined) cloudUpdates.openai_api_key = params.openaiApiKey;
@@ -102,8 +103,8 @@ const plugin = {
           return { content: [{ type: "text", text: "Cannot check cloud settings: Claw Kanban apiKey is not configured locally." }] };
         }
         const rawEndpoint = pluginConfig.cloudApiEndpoint?.trim() ?? "https://teammate.work/api/v1";
-        // Convert /api/v1 to /api/settings correctly
-        const baseEndpoint = rawEndpoint.replace(/\/v1\/?$/, "");
+        // IMPORTANT: We need a trailing slash if it doesn't exist, to properly append 'settings'
+        const baseEndpoint = rawEndpoint.replace(/\/v1\/?$/, "/");
 
         try {
           // The endpoint should be https://teammate.work/api/settings
