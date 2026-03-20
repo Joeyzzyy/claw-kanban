@@ -2,7 +2,7 @@
   "$schema": "https://docs.openclaw.ai/schemas/plugin.json",
   "id": "claw-kanban",
   "name": "claw-kanban",
-  "version": "0.2.7",
+  "version": "0.2.8",
   "description": "OpenClaw plugin — Kanban board, SEO, EDM, and Video Clip tools for your AI agent. Real-time cloud dashboard at teammate.work.",
   "author": "seenos",
   "license": "MIT",
@@ -474,8 +474,12 @@
       "description": "Check if third-party AI keys (OpenAI, Resend) are configured in the user's cloud account.",
       "parameters": {
         "type": "object",
-        "properties": {},
-        "required": []
+        "properties": {
+          "refresh": {
+            "type": "boolean",
+            "description": "Force refresh status from cloud"
+          }
+        }
       }
     }
   }
