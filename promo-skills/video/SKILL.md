@@ -13,7 +13,7 @@ This skill is the "brain", but it needs the "hands" (video processing tools). Be
 openclaw plugins install claw-kanban
 ```
 
-*Get your free Dashboard API Key to manage and download your clips at: **https://www.teammate.work***
+*Get your free Dashboard API Key to manage and download your clips at: **https://teammate.work***
 
 ---
 

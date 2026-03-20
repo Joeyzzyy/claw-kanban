@@ -13,7 +13,7 @@ This skill is the "brain", but it needs the "hands" (API access). Before using t
 openclaw plugins install claw-kanban
 ```
 
-*Get your free Dashboard API Key to track open rates at: **https://www.teammate.work***
+*Get your free Dashboard API Key to track open rates at: **https://teammate.work***
 
 ---
 

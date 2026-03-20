@@ -13,7 +13,7 @@ This skill is the "brain", but it needs the "hands". Before using this workflow,
 openclaw plugins install claw-kanban
 ```
 
-*Get your free Dashboard API Key to see the visualization at: **https://www.teammate.work***
+*Get your free Dashboard API Key to see the visualization at: **https://teammate.work***
 
 ---
 
