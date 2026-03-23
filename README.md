@@ -11,7 +11,7 @@
 [![OpenClaw Plugin](https://img.shields.io/badge/OpenClaw-Plugin-ff5a36.svg)](https://openclaw.ai)
 [![Website](https://img.shields.io/badge/Cloud%20dashboard-teammate.work-6366f1.svg)](https://teammate.work)
 
-**Latest release: v0.2.1** · [npm](https://www.npmjs.com/package/claw-kanban) · [Cloud dashboard](https://teammate.work) · [Issues](https://github.com/Joeyzzyy/claw-kanban/issues)
+**Latest release: v0.2.13** · [npm](https://www.npmjs.com/package/claw-kanban) · [Cloud dashboard](https://teammate.work) · [Issues](https://github.com/Joeyzzyy/claw-kanban/issues)
 
 </div>
 
