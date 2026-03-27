@@ -2,7 +2,7 @@
   "$schema": "https://docs.openclaw.ai/schemas/plugin.json",
   "id": "claw-kanban",
   "name": "claw-kanban",
-  "version": "0.2.8",
+  "version": "0.2.13",
   "description": "OpenClaw plugin — Kanban board, SEO, EDM, and Video Clip tools for your AI agent. Real-time cloud dashboard at teammate.work.",
   "author": "seenos",
   "license": "MIT",
